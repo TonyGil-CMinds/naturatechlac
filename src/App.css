@@ -10,7 +10,7 @@
 h1 {
   font-size: 3rem;
   margin-bottom: 1rem;
-  color: #1a1a1a;
+  color: --color-white;
 }
 
 p {
