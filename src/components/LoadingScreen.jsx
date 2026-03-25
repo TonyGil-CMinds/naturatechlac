@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import './LoadingScreen.css';
 
 const WORDS = ['Ecosistemas', 'Posibilidades', 'Territorios', 'Comunidades', 'Bioregiones'];
-const DURATION = 2.0;
+const DURATION = 4.0;
 const WORD_INTERVAL = 0.4;
 const RIPPLE_COUNT = 5;
 
