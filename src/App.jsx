@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import SplitText from './components/SplitText'
 import SplineBackground from './components/SplineBackground'
+import LiquidButton from './components/LiquidButton'
 import './App.css'
 
 function App() {
@@ -9,12 +10,12 @@ function App() {
 
   useEffect(() => {
     const el = overlayRef.current;
-    // Animate subtitle and button in after the SplitText finishes
-    const targets = el.querySelectorAll('.hero-subtitle, .hero-btn-wrap');
+    // Animate subtitle in after SplitText title finishes
+    const subtitle = el.querySelector('.hero-subtitle');
     gsap.fromTo(
-      targets,
+      subtitle,
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1, delay: 1.0, stagger: 0.2, ease: 'power3.out' }
+      { opacity: 1, y: 0, duration: 1, delay: 1.0, ease: 'power3.out' }
     );
   }, []);
 
@@ -47,7 +48,7 @@ function App() {
         </button>
       </nav>
 
-      {/* ─── Hero text overlay — pointer-events disabled so Spline stays interactive ─── */}
+      {/* ─── Hero overlay ─── */}
       <div className="hero-overlay" ref={overlayRef}>
         <div className="hero-content" style={{ pointerEvents: 'none' }}>
           <h1 className="hero-title">
@@ -59,11 +60,10 @@ function App() {
             prosperidad de las comunidades que la protegen.
           </p>
         </div>
-        <div className="hero-btn-wrap" style={{ pointerEvents: 'auto' }}>
-          <button className="hero-btn">
-            <span>Ver video</span>
-            <span className="btn-arrow">›</span>
-          </button>
+
+        {/* LiquidButton handles its own entrance animation, starts after title+subtitle */}
+        <div className="hero-btn-wrap">
+          <LiquidButton label="Ver video" startDelay={2.0} />
         </div>
       </div>
 
@@ -72,3 +72,4 @@ function App() {
 }
 
 export default App
+

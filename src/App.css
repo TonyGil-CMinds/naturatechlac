@@ -140,37 +140,72 @@
   margin: 0 auto 2rem;
 }
 
-/* ── CTA button ───────────────────────────────────────────────────── */
-.hero-btn-wrap {
-  opacity: 0; /* animated in by GSAP */
+/* ── Liquid Glass Button ──────────────────────────────────────────────────── */
+.lb-wrap {
+  display: inline-block;
+  position: relative;
 }
 
-.hero-btn {
+/* corner squares */
+.corner {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: var(--color-green);
+  z-index: 2;
+  pointer-events: none;
+}
+.corner-tl { top: -1px;    left: -1px;  }
+.corner-tr { top: -1px;    right: -1px; }
+.corner-bl { bottom: -1px; left: -1px;  }
+.corner-br { bottom: -1px; right: -1px; }
+
+/* button shell */
+.lb-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  padding: 0.9rem 2rem;
-  border: 1px solid rgba(244, 255, 222, 0.4);
-  border-radius: 50px;
-  background: rgba(244, 255, 222, 0.06);
-  backdrop-filter: blur(6px);
+  gap: 1.5rem;
+  padding: 0 1.8rem;
+  border: 1px solid rgba(244, 255, 222, 0.3);
+  border-radius: 0;            /* square corners as requested */
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.08) inset,
+    0 4px 32px rgba(0,0,0,0.3);
   color: var(--color-white);
   font-family: 'Outfit', sans-serif;
   font-size: 1rem;
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  min-width: 260px;
-  transition: background 0.3s, border-color 0.3s;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: background 0.3s, box-shadow 0.3s;
 }
-.hero-btn:hover {
-  background: rgba(188, 221, 5, 0.12);
-  border-color: var(--color-green);
+.lb-btn:hover {
+  background: rgba(188, 221, 5, 0.1);
+  box-shadow: 0 0 0 1px var(--color-green) inset, 0 4px 32px rgba(0,0,0,0.3);
 }
 
-.btn-arrow {
-  font-size: 1.4rem;
-  line-height: 1;
+.lb-label {
+  display: inline-flex;
+  align-items: center;
+}
+.lb-char {
+  display: inline-block;
+  white-space: pre;
+}
+.lb-icon {
+  display: flex;
+  align-items: center;
   opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* hero-btn-wrap still needed for pointer events */
+.hero-btn-wrap {
+  pointer-events: auto;
 }
