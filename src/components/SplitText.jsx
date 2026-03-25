@@ -6,10 +6,10 @@ const SplitText = ({ text, className = '' }) => {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    
+
     // Select all the individual characters
     const chars = containerRef.current.querySelectorAll('.char');
-    
+
     gsap.fromTo(
       chars,
       {
@@ -21,8 +21,8 @@ const SplitText = ({ text, className = '' }) => {
         y: 0,
         opacity: 1,
         rotateX: 0,
-        duration: 0.8,
-        stagger: 0.05,
+        duration: 1.25,
+        stagger: 50,
         ease: 'back.out(1.7)',
         delay: 0.1
       }
