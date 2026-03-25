@@ -21,8 +21,8 @@ const SplitText = ({ text, className = '' }) => {
         y: 0,
         opacity: 1,
         rotateX: 0,
-        duration: 1.25,
-        stagger: 50,
+        duration: 0.8,
+        stagger: 0.05,
         ease: 'back.out(1.7)',
         delay: 0.1
       }
