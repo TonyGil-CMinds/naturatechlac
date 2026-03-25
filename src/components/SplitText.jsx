@@ -1,44 +1,68 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { useSprings, animated } from '@react-spring/web';
+import { useEffect, useRef, useState } from 'react';
 
-const SplitText = ({ text, className = '' }) => {
-  const containerRef = useRef(null);
+export const SplitText = ({
+  text,
+  className = '',
+  delay = 50,
+  animationFrom = { opacity: 0, transform: 'translate3d(0,40px,0)' },
+  animationTo = { opacity: 1, transform: 'translate3d(0,0px,0)' },
+  easing = 'easeOutCubic',
+  threshold = 0.1,
+  rootMargin = '-10px',
+  textAlign = 'center'
+}) => {
+  const letters = text.split('');
+  const [inView, setInView] = useState(false);
+  const ref = useRef();
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Select all the individual characters
-    const chars = containerRef.current.querySelectorAll('.char');
-
-    gsap.fromTo(
-      chars,
-      {
-        y: 50,
-        opacity: 0,
-        rotateX: -90,
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(ref.current);
+        }
       },
-      {
-        y: 0,
-        opacity: 1,
-        rotateX: 0,
-        duration: 0.8,
-        stagger: 0.01,
-        ease: 'back.out(1.7)',
-        delay: 0.1
-      }
+      { threshold, rootMargin }
     );
-  }, [text]);
+
+    if (ref.current) observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [threshold, rootMargin]);
+
+  const springs = useSprings(
+    letters.length,
+    letters.map((_, i) => ({
+      from: animationFrom,
+      to: inView
+        ? async (next) => {
+          await next(animationTo);
+        }
+        : animationFrom,
+      delay: i * delay,
+      config: { tension: 200, friction: 20, clamp: true },
+    }))
+  );
 
   return (
-    <span ref={containerRef} className={className} style={{ display: 'inline-block', perspective: '1000px' }}>
-      {text.split(' ').map((word, wordIndex) => (
-        <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap', marginRight: '0.25em' }}>
-          {word.split('').map((char, charIndex) => (
-            <span key={charIndex} className="char" style={{ display: 'inline-block', transformOrigin: 'bottom center' }}>
-              {char}
-            </span>
-          ))}
-        </span>
+    <span
+      ref={ref}
+      className={`split-parent ${className}`}
+      style={{ textAlign, display: 'inline', whiteSpace: 'pre-wrap' }}
+    >
+      {springs.map((props, index) => (
+        <animated.span
+          key={index}
+          style={{
+            ...props,
+            display: 'inline-block',
+            willChange: 'transform, opacity',
+          }}
+        >
+          {letters[index] === ' ' ? '\u00A0' : letters[index]}
+        </animated.span>
       ))}
     </span>
   );
