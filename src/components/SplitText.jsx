@@ -22,7 +22,7 @@ const SplitText = ({ text, className = '' }) => {
         opacity: 1,
         rotateX: 0,
         duration: 0.8,
-        stagger: 0.05,
+        stagger: 0.01,
         ease: 'back.out(1.7)',
         delay: 0.1
       }
