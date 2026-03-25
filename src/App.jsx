@@ -17,17 +17,7 @@ function App() {
 
   return (
     <div className="app-container" ref={containerRef}>
-      <h1>
-        <SplitText
-          text="ENRAIZANDO POSIBILIDADES"
-          delay={50}
-          animationFrom={{ opacity: 0, transform: 'translate3d(0,40px,0)' }}
-          animationTo={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-          easing="easeOutCubic"
-          threshold={0.1}
-          rootMargin="-10px"
-        />
-      </h1>
+      <h1><SplitText text="ENRAIZANDO POSIBILIDADES" /></h1>
       <p style={{ opacity: 0 }}>Entorno listo para diseñar.</p>
     </div>
   )
