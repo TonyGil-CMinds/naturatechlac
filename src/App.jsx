@@ -5,6 +5,7 @@ import SplineBackground from './components/SplineBackground'
 import LiquidButton from './components/LiquidButton'
 import LoadingScreen from './components/LoadingScreen'
 import NavMenu from './components/NavMenu'
+import ScrollSection from './components/ScrollSection'
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const bar2Ref     = useRef(null);
   const [loading,  setLoading]  = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef(null);
 
   /* ── Subtitle entrance after loading ── */
   useEffect(() => {
@@ -44,7 +46,7 @@ function App() {
   return (
     <>
       {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
-      <div className="hero">
+      <div className="hero" ref={heroRef}>
 
         {/* ─── 3D background ─── */}
         <SplineBackground />
@@ -53,7 +55,7 @@ function App() {
         <nav className="hero-nav" style={{ pointerEvents: 'auto' }}>
           <button className="audio-btn" aria-label="Activa el audio">
             <span className="audio-bars">
-              {[...Array(4)].map((_, i) => <span key={i} className="bar" />)}
+              {[...Array(4)].map((_, j) => <span key={j} className="bar" />)}
             </span>
             Activa el audio
           </button>
@@ -100,6 +102,8 @@ function App() {
         </div>
 
       </div>
+
+      <ScrollSection heroRef={heroRef} />
     </>
   )
 }
