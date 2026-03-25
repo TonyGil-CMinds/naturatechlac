@@ -1,26 +1,30 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import SplitText from './components/SplitText'
 import SplineBackground from './components/SplineBackground'
 import LiquidButton from './components/LiquidButton'
+import LoadingScreen from './components/LoadingScreen'
 import './App.css'
 
 function App() {
   const overlayRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (loading) return; // wait until loading completes
     const el = overlayRef.current;
-    // Animate subtitle in after SplitText title finishes
     const subtitle = el.querySelector('.hero-subtitle');
     gsap.fromTo(
       subtitle,
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1, delay: 1.0, ease: 'power3.out' }
+      { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' }
     );
-  }, []);
+  }, [loading]);
 
   return (
-    <div className="hero">
+    <>
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      <div className="hero">
 
       {/* ─── 3D background ─── */}
       <SplineBackground />
@@ -68,6 +72,7 @@ function App() {
       </div>
 
     </div>
+  </>
   )
 }
 
