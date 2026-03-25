@@ -56,37 +56,34 @@ export default function LoadingScreen({ onComplete }) {
       onComplete: onComplete,
     });
 
-    // Blur & fade the content
-    exitTl.to(inner, {
-      filter: 'blur(16px)',
-      scale: 1.03,
-      opacity: 0.4,
-      duration: 0.5,
-      ease: 'power2.in',
-    }, 0);
-
-    // Ripple rings expand from center, staggered
+    /* The vignette dark color is ~rgba(0,16,17). Each ring is a dark
+       circle that expands from center outward. The last ring needs to
+       reach scale ~5 to cover the full viewport from its 60vmin base.
+       They stagger tightly so it reads as one smooth wave pulse. */
     rings.forEach((ring, i) => {
+      const isLast = i === rings.length - 1;
       exitTl.fromTo(
         ring,
-        { scale: 0, opacity: 0.55 - i * 0.07, filter: 'blur(0px)' },
+        { scale: 0, opacity: 1 },
         {
-          scale: 3.5 + i * 0.7,
-          opacity: 0,
-          filter: `blur(${8 + i * 5}px)`,
-          duration: 0.7,
-          ease: 'power2.out',
+          scale: isLast ? 5.5 : 3 + i * 0.4,
+          opacity: isLast ? 1 : 0.5 + i * 0.1,
+          duration: 0.55 + i * 0.05,
+          ease: 'power2.inOut',
         },
-        i * 0.08   // stagger each ring
+        i * 0.065   // stagger: tight so waves feel continuous
       );
     });
 
-    // Finally fade out the entire screen
-    exitTl.to(screen, {
+    // Fade the content out as the dark wave covers it
+    exitTl.to(inner, {
       opacity: 0,
       duration: 0.3,
-      ease: 'power1.in',
-    }, 0.5);
+      ease: 'power2.in',
+    }, 0);
+
+    // Once last ring covers everything, snap whole screen invisible
+    exitTl.to(screen, { opacity: 0, duration: 0 }, '>-0.05');
   }
 
   /* ── progress + odometer ──────────────────────────────────────── */
