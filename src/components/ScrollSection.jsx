@@ -4,6 +4,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './ScrollSection.css';
 import LiquidButton from './LiquidButton';
 
+export const CARD_TIMINGS = {
+  dotStart: 0.3,
+  blink: 0.4,
+  growX: 0.4,
+  growY: 0.4,
+  contentAppear: 0.4
+};
+
 gsap.registerPlugin(ScrollTrigger);
 
 const STAGES = [
@@ -83,9 +91,42 @@ export default function ScrollSection({ heroRef }) {
       }
     });
 
-    // Initial Appearance
-    tl.fromTo(contentRef.current, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 0.1)
-      .fromTo(cardRef.current, { x: 100, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5 }, 0.1);
+    // Initial Appearance of general section content
+    tl.fromTo(contentRef.current, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 0.1);
+
+    // Card Entrance Timeline (only for the card when it first appears)
+    const cardEl = cardRef.current;
+    const cardCorners = cardEl.querySelectorAll('.card-corner');
+    const cardText = cardEl.querySelectorAll('.card-body > *');
+    const cardImage = cardEl.querySelector('.card-image-wrap');
+
+    const cardTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 60%", 
+            toggleActions: "play reverse play reverse"
+        }
+    });
+
+    gsap.set(cardEl, { width: 0, height: 0, opacity: 0 });
+    gsap.set(cardCorners, { opacity: 0 });
+    gsap.set(cardText, { y: 20, opacity: 0 });
+    gsap.set(cardImage, { y: -20, opacity: 0 });
+
+    cardTl.to(cardEl, { opacity: 1, width: 10, height: 10, duration: CARD_TIMINGS.dotStart, ease: "power2.out" })
+          .to(cardCorners, { opacity: 1, duration: 0.05 })
+          .to(cardCorners, { opacity: 0, duration: 0.05 })
+          .to(cardCorners, { opacity: 1, duration: 0.05 })
+          .to(cardCorners, { opacity: 0, duration: 0.05 })
+          .to(cardCorners, { opacity: 1, duration: 0.05 })
+          .to(cardCorners, { opacity: 0, duration: 0.05 })
+          .to(cardCorners, { opacity: 1, duration: 0.05 })
+          .to(cardCorners, { opacity: 0, duration: 0.05 })
+          .to(cardCorners, { opacity: 1, duration: 0.05 })
+          .to(cardEl, { width: "100%", duration: CARD_TIMINGS.growX, ease: "power3.inOut" })
+          .to(cardEl, { height: "auto", duration: CARD_TIMINGS.growY, ease: "power2.out" })
+          .to(cardText, { opacity: 1, y: 0, stagger: 0.1, duration: CARD_TIMINGS.contentAppear, ease: "power2.out" }, "-=0.2")
+          .to(cardImage, { opacity: 1, y: 0, duration: CARD_TIMINGS.contentAppear, ease: "power2.out" }, "-=0.2");
 
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -118,31 +159,35 @@ export default function ScrollSection({ heroRef }) {
         </div>
 
         {/* Right Glass Card */}
-        <div className="scroll-card-wrap" ref={cardRef}>
-          <div className="scroll-card">
-            <div className="card-image-wrap">
-              <img src={STAGES[currentStep].image} alt={STAGES[currentStep].title} className="card-image" />
-              <div className="card-corners">
-                <span className="card-corner tl" />
-                <span className="card-corner tr" />
-                <span className="card-corner bl" />
-                <span className="card-corner br" />
-              </div>
+        <div className="scroll-card-wrap">
+          <div className="scroll-card" ref={cardRef}>
+            <div className="card-corners">
+              <span className="card-corner tl" />
+              <span className="card-corner tr" />
+              <span className="card-corner bl" />
+              <span className="card-corner br" />
             </div>
-            <div className="card-body">
-              <p className="card-text">{STAGES[currentStep].description}</p>
-              <div className="card-footer">
-                <LiquidButton label={STAGES[currentStep].buttonLabel} />
-                <div className="card-id">
-                   <span className="id-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <rect x="3" y="3" width="18" height="18" rx="2" strokeDasharray="2 2" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
-                   </span>
-                   <span className="id-text">000018/10</span>
+            <div className="card-clip">
+                <div className="card-inner-content">
+                  <div className="card-image-wrap">
+                    <img src={STAGES[currentStep].image} alt={STAGES[currentStep].title} className="card-image" />
+                  </div>
+                  <div className="card-body">
+                    <p className="card-text">{STAGES[currentStep].description}</p>
+                    <div className="card-footer">
+                      <LiquidButton label={STAGES[currentStep].buttonLabel} />
+                      <div className="card-id">
+                         <span className="id-icon">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-green)" strokeWidth="1.5">
+                              <rect x="3" y="3" width="18" height="18" rx="2" strokeDasharray="2 2" />
+                              <circle cx="12" cy="12" r="3" />
+                          </svg>
+                         </span>
+                         <span className="id-text">000018/10</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>

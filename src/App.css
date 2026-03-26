@@ -54,8 +54,14 @@
 .bar {
   display: block;
   width: 2.5px;
-  background: var(--color-white);
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 2px;
+  transform: scaleY(0.4);
+  transform-origin: bottom;
+  transition: background 0.3s;
+}
+.audio-btn.active .bar {
+  background: var(--color-white);
   animation: waveform 1.2s ease-in-out infinite;
 }
 .bar:nth-child(1) { height: 6px; animation-delay: 0s; }
@@ -172,7 +178,7 @@
   position: relative;
 }
 
-/* ── The actual glass button ─────────────────────────────────── */
+/* ── The animated glass/border button ──────────────────────────── */
 .lb-btn {
   position: relative;
   display: flex;
@@ -180,73 +186,45 @@
   justify-content: space-between;
   gap: 1.5rem;
   padding: 0 1.8rem;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
   cursor: pointer;
   color: var(--color-white);
   font-family: 'Outfit', sans-serif;
   font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   white-space: nowrap;
-  overflow: visible;
+  background: transparent;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
 
-  /* ── Real glass: multi-layer background ── */
-  background:
-    /* top specular tint */
-    linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(255, 255, 255, 0.04) 40%,
-      rgba(0, 0, 0, 0.08) 100%
-    );
-
-  /* ── Strong blur is the heart of glass ── */
-  backdrop-filter: blur(24px) saturate(200%) brightness(1.15);
-  -webkit-backdrop-filter: blur(24px) saturate(200%) brightness(1.15);
-
-  /* ── Glass border: bright top edge, subtle sides, dark bottom ── */
-  box-shadow:
-    inset 0  1px 0   rgba(255, 255, 255, 0.45),   /* top highlight */
-    inset 0 -1px 0   rgba(0,   0,   0,   0.20),   /* bottom shadow */
-    inset 1px  0  0  rgba(255, 255, 255, 0.12),   /* left edge */
-    inset -1px 0  0  rgba(255, 255, 255, 0.12),   /* right edge */
-    0 4px 30px        rgba(0, 0, 0, 0.35);         /* outer shadow */
-
-  transition: background 0.35s, box-shadow 0.35s;
+/* Gradient hover effect */
+.lb-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(188, 221, 5, 0.8) 0%, rgba(188, 221, 5, 0.1) 80%, transparent 100%);
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  z-index: 1; /* under text */
+  pointer-events: none;
 }
 
 .lb-btn:hover {
-  background:
-    linear-gradient(
-      160deg,
-      rgba(188, 221, 5, 0.25) 0%,
-      rgba(188, 221, 5, 0.08) 50%,
-      rgba(0, 0, 0, 0.10) 100%
-    );
-  box-shadow:
-    inset 0  1px 0   rgba(188, 221, 5, 0.6),
-    inset 0 -1px 0   rgba(0, 0, 0, 0.25),
-    inset 1px  0  0  rgba(188, 221, 5, 0.25),
-    inset -1px 0  0  rgba(188, 221, 5, 0.25),
-    0 4px 30px        rgba(0, 0, 0, 0.40);
+  border-color: rgba(188, 221, 5, 0.5);
+}
+
+.lb-btn:hover::before {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* ── Specular glare strip (bright reflection at top) ─────────── */
 .lb-glare {
-  position: absolute;
-  top: 0;
-  left: 4%;
-  right: 4%;
-  height: 40%;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.22),
-    transparent
-  );
-  border-radius: 0 0 60% 60% / 0 0 100% 100%;
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 .lb-label {

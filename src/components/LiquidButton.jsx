@@ -1,17 +1,27 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
- * LiquidButton
+ * LiquidButton -> Animated Border Button
  *
  * Entrance animation:
- * 1. A clip-wrapper handles the expanding (width/height), NOT the button,
- *    so backdrop-filter is never blocked by overflow:hidden on the button.
- * 2. Seed → Blink corners → Expand width → Expand height → Split chars
+ * 0.3s Starts from a single dot
+ * 0.4s Grows to 10px times 10px and blinks four times
+ * 0.4s Grows in x and then text and icon appears
  */
+export const BUTTON_TIMINGS = {
+  dotGrow: 0.3,
+  blink: 0.4,
+  growX: 0.4,
+  textAppear: 0.4
+};
+
 export default function LiquidButton({ label = 'Ver video', startDelay = 0 }) {
   const wrapRef   = useRef(null);
-  const clipRef   = useRef(null);  // this div does the width/height grow
+  const clipRef   = useRef(null);
   const charsRef  = useRef([]);
 
   const FULL_W = 280;
@@ -23,43 +33,50 @@ export default function LiquidButton({ label = 'Ver video', startDelay = 0 }) {
     const chars  = charsRef.current.filter(Boolean);
     const corners = wrap.querySelectorAll('.corner');
 
-    const tl = gsap.timeline({ delay: startDelay });
+    const tl = gsap.timeline({ 
+      delay: startDelay,
+      scrollTrigger: {
+        trigger: wrap,
+        start: "top 90%",
+      }
+    });
 
     // ── 0. initial state ─────────────────────────────────────────
     gsap.set(clip,    { width: 0, height: 0, overflow: 'hidden' });
-    gsap.set(chars,   { opacity: 0, y: 18 });
+    gsap.set(chars,   { opacity: 0, y: 15 });
     gsap.set(corners, { opacity: 0 });
 
-    // ── 1. seed 15×15 ────────────────────────────────────────────
-    tl.to(clip, { width: 15, height: 15, duration: 0.2, ease: 'power2.out' });
+    // ── 1. seed (dot) ────────────────────────────────────────────
+    tl.to(clip, { width: 10, height: 10, duration: BUTTON_TIMINGS.dotGrow, ease: 'power2.out' });
 
-    // ── 2. blink corners 3× ──────────────────────────────────────
+    // ── 2. blink corners 4× (0.4s) ───────────────────────────────
     tl.to(corners, { opacity: 1, duration: 0.05 })
-      .to(corners, { opacity: 0, duration: 0.08 })
+      .to(corners, { opacity: 0, duration: 0.05 })
       .to(corners, { opacity: 1, duration: 0.05 })
-      .to(corners, { opacity: 0, duration: 0.08 })
+      .to(corners, { opacity: 0, duration: 0.05 })
       .to(corners, { opacity: 1, duration: 0.05 })
-      .to(corners, { opacity: 0, duration: 0.08 })
-      .to(corners, { opacity: 1, duration: 0.05 });
+      .to(corners, { opacity: 0, duration: 0.05 })
+      .to(corners, { opacity: 1, duration: 0.05 })
+      .to(corners, { opacity: 0, duration: 0.05 });
 
-    // ── 3. expand width ──────────────────────────────────────────
-    tl.to(clip, { width: FULL_W, duration: 0.4, ease: 'power3.inOut' });
-
-    // ── 4. expand height ─────────────────────────────────────────
-    tl.to(clip, {
-      height: FULL_H,
-      duration: 0.25,
-      ease: 'power2.out',
-      // Once fully open, release the clip so backdrop-filter is unrestricted
-      onComplete: () => gsap.set(clip, { overflow: 'visible' }),
+    // ── 3. expand width & height ─────────────────────────────────
+    tl.to(clip, { 
+      width: FULL_W, 
+      height: FULL_H, 
+      duration: BUTTON_TIMINGS.growX, 
+      ease: 'power3.inOut',
+      onComplete: () => {
+         gsap.set(clip, { overflow: 'visible' });
+         gsap.set(corners, { opacity: 1 });
+      }
     });
 
-    // ── 5. split chars ───────────────────────────────────────────
+    // ── 4. split chars ───────────────────────────────────────────
     tl.to(chars, {
       opacity: 1,
       y: 0,
-      duration: 0.4,
-      stagger: 0.03,
+      duration: BUTTON_TIMINGS.textAppear,
+      stagger: 0.02,
       ease: 'back.out(1.7)',
     });
 

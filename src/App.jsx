@@ -14,6 +14,7 @@ function App() {
   const bar2Ref     = useRef(null);
   const [loading,  setLoading]  = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAudioActive, setIsAudioActive] = useState(false);
   const heroRef = useRef(null);
 
   /* ── Subtitle entrance after loading ── */
@@ -53,11 +54,15 @@ function App() {
 
         {/* ─── Navbar ─── */}
         <nav className="hero-nav" style={{ pointerEvents: 'auto' }}>
-          <button className="audio-btn" aria-label="Activa el audio">
+          <button 
+            className={`audio-btn ${isAudioActive ? 'active' : ''}`} 
+            aria-label={isAudioActive ? 'Desactivar audio' : 'Activa el audio'}
+            onClick={() => setIsAudioActive(!isAudioActive)}
+          >
             <span className="audio-bars">
               {[...Array(4)].map((_, j) => <span key={j} className="bar" />)}
             </span>
-            Activa el audio
+            {isAudioActive ? 'Desactivar audio' : 'Activa el audio'}
           </button>
 
           <div className="logo" aria-label="NaturaTech logo">
@@ -102,6 +107,9 @@ function App() {
         </div>
 
       </div>
+
+      {/* Spacer para esperar 2x scroll antes de que la sección desaparezca */}
+      <div className="hero-scroll-spacer" style={{ height: '200vh', width: '100%', pointerEvents: 'none' }} />
 
       <ScrollSection heroRef={heroRef} />
     </>
