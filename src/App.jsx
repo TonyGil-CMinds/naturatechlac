@@ -6,6 +6,7 @@ import LiquidButton from './components/LiquidButton'
 import LoadingScreen from './components/LoadingScreen'
 import NavMenu from './components/NavMenu'
 import ScrollSection from './components/ScrollSection'
+import Footer from './components/Footer'
 import './App.css'
 
 function App() {
@@ -112,6 +113,8 @@ function App() {
       <div className="hero-scroll-spacer" style={{ height: '200vh', width: '100%', pointerEvents: 'none' }} />
 
       <ScrollSection heroRef={heroRef} />
+
+      <Footer />
     </>
   )
 }
