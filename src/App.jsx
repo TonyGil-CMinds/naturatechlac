@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import gsap from 'gsap'
 import SplitText from './components/SplitText'
 import SplineBackground from './components/SplineBackground'
@@ -49,6 +50,7 @@ function App() {
   return (
     <>
       <Analytics />
+      <SpeedInsights />
       {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       <div className="hero" ref={heroRef}>
 
