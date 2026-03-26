@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Analytics } from "@vercel/analytics/next"
 import gsap from 'gsap'
 import SplitText from './components/SplitText'
 import SplineBackground from './components/SplineBackground'
@@ -10,10 +11,10 @@ import Footer from './components/Footer'
 import './App.css'
 
 function App() {
-  const overlayRef  = useRef(null);
-  const bar1Ref     = useRef(null);
-  const bar2Ref     = useRef(null);
-  const [loading,  setLoading]  = useState(true);
+  const overlayRef = useRef(null);
+  const bar1Ref = useRef(null);
+  const bar2Ref = useRef(null);
+  const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAudioActive, setIsAudioActive] = useState(false);
   const heroRef = useRef(null);
@@ -35,7 +36,7 @@ function App() {
     if (!b1 || !b2) return;
 
     if (menuOpen) {
-      gsap.to(b1, { rotate: 45,  y: 3.5, duration: 0.3, ease: 'power2.inOut' });
+      gsap.to(b1, { rotate: 45, y: 3.5, duration: 0.3, ease: 'power2.inOut' });
       gsap.to(b2, { rotate: -45, y: -3.5, duration: 0.3, ease: 'power2.inOut' });
     } else {
       gsap.to(b1, { rotate: 0, y: 0, duration: 0.3, ease: 'power2.inOut' });
@@ -47,6 +48,7 @@ function App() {
 
   return (
     <>
+      <Analytics />
       {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       <div className="hero" ref={heroRef}>
 
@@ -55,8 +57,8 @@ function App() {
 
         {/* ─── Navbar ─── */}
         <nav className="hero-nav" style={{ pointerEvents: 'auto' }}>
-          <button 
-            className={`audio-btn ${isAudioActive ? 'active' : ''}`} 
+          <button
+            className={`audio-btn ${isAudioActive ? 'active' : ''}`}
             aria-label={isAudioActive ? 'Desactivar audio' : 'Activa el audio'}
             onClick={() => setIsAudioActive(!isAudioActive)}
           >
@@ -68,10 +70,10 @@ function App() {
 
           <div className="logo" aria-label="NaturaTech logo">
             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 4C18 4 10 10 10 20C10 26 14 30 18 32C22 30 26 26 26 20C26 10 18 4 18 4Z" fill="none" stroke="#F4FFDE" strokeWidth="1.5"/>
-              <path d="M18 32V16" stroke="#F4FFDE" strokeWidth="1.5" strokeLinecap="round"/>
-              <path d="M18 20L12 14" stroke="#F4FFDE" strokeWidth="1.5" strokeLinecap="round"/>
-              <path d="M18 24L24 18" stroke="#F4FFDE" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M18 4C18 4 10 10 10 20C10 26 14 30 18 32C22 30 26 26 26 20C26 10 18 4 18 4Z" fill="none" stroke="#F4FFDE" strokeWidth="1.5" />
+              <path d="M18 32V16" stroke="#F4FFDE" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M18 20L12 14" stroke="#F4FFDE" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M18 24L24 18" stroke="#F4FFDE" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </div>
 
